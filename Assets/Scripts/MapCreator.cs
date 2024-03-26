@@ -11,7 +11,38 @@ public class MapCreator : MonoBehaviour
     public float TimeTubExist;
 
     private float LastHight = 1;
-    IEnumerator Start()
+
+    [Header("UI")]
+    public GameObject BoardGame;
+    void Start()
+    {
+        GameController.Instance.OnStartGame += OnGameStart;
+        GameController.Instance.OnGameOver += OnEndGame;
+    }
+
+    private void OnDestroy()
+    {
+        GameController.Instance.OnStartGame -= OnGameStart;
+        GameController.Instance.OnGameOver -= OnEndGame;
+    }
+
+    private void OnGameStart()
+    {
+        StartCoroutine(CreateTube());
+        BoardGame.gameObject.SetActive(false);
+    }
+
+    private void OnEndGame()
+    {
+        StopAllCoroutines();
+        BoardGame.gameObject.SetActive(true);
+        foreach( var tub in StartSpawnTub.GetComponentsInChildren<Tube>())
+        {
+            Destroy(tub.gameObject);
+        }
+    }
+
+    IEnumerator CreateTube()
     {
         while (true)
         {
@@ -25,8 +56,8 @@ public class MapCreator : MonoBehaviour
                 Destroy(tube.gameObject);
             });
         }
-    }
 
+    }
 
 
 }
