@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
     public Action<int> OnUpdateScore;
     public Action OnStartGame;
     public Action OnGameOver;
+    public Action OnBirdDeath;
 
     public void IncreaseScore()
     {

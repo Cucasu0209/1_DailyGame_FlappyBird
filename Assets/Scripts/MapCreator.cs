@@ -18,12 +18,14 @@ public class MapCreator : MonoBehaviour
     {
         GameController.Instance.OnStartGame += OnGameStart;
         GameController.Instance.OnGameOver += OnEndGame;
+        GameController.Instance.OnBirdDeath += OnBirdDeath;
     }
 
     private void OnDestroy()
     {
         GameController.Instance.OnStartGame -= OnGameStart;
         GameController.Instance.OnGameOver -= OnEndGame;
+        GameController.Instance.OnBirdDeath -= OnBirdDeath;
     }
 
     private void OnGameStart()
@@ -31,12 +33,20 @@ public class MapCreator : MonoBehaviour
         StartCoroutine(CreateTube());
         BoardGame.gameObject.SetActive(false);
     }
+    private void OnBirdDeath()
+    {
+        foreach (var tub in StartSpawnTub.GetComponentsInChildren<Tube>())
+        {
+            tub.transform.DOKill();
+        }
+        StopAllCoroutines();
+    }
 
     private void OnEndGame()
     {
         StopAllCoroutines();
         BoardGame.gameObject.SetActive(true);
-        foreach( var tub in StartSpawnTub.GetComponentsInChildren<Tube>())
+        foreach (var tub in StartSpawnTub.GetComponentsInChildren<Tube>())
         {
             Destroy(tub.gameObject);
         }

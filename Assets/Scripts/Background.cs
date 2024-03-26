@@ -15,10 +15,26 @@ public class Background : MonoBehaviour
         LeftBG = BGs[1].anchoredPosition.x;
         LoopBG();
         SetWeather(true);
+        GameController.Instance.OnGameOver += OnEndGame;
+        GameController.Instance.OnBirdDeath += OnBirdDeath;
+    }
+    private void OnEndGame()
+    {
+        LoopBG();
+    }
+
+    private void OnBirdDeath()
+    {
+        BGs[1].DOKill();
+        BGs[0].DOKill();
     }
 
     private void LoopBG()
     {
+        BGs[1].DOKill();
+        BGs[0].DOKill();
+        BGs[1].anchoredPosition = new Vector2(LeftBG, 0);
+        BGs[0].anchoredPosition = new Vector2(0, 0);
         BGs[1].DOAnchorPosX(-LeftBG, TimeToLoop).SetEase(Ease.Linear).SetLoops(-1, LoopType.Restart);
         BGs[0].DOAnchorPosX(-LeftBG, TimeToLoop / 2).SetEase(Ease.Linear).OnComplete(() =>
         {
